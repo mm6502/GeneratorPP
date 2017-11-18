@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Generátor platobných predpisov";
+}
+
+@Html.Partial("AppDescriptionPartial")
+
+<section>
+<h2>Pracujeme na tom</h2>
+    <div class="lead">Čakajte prosím, môže to chvíľku trvať...</div>
+    <div id="progressbar"><div class="progress-label"></div></div>
+</section>
+
+@section Scripts {
+<environment include="Development">
+    <script src="~/lib/jquery-file-download/src/Scripts/jquery.fileDownload.js"></script>
+    <script src="~/js/inProgress.js"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/jquery.fileDownload.min.js" asp-append-version="true"></script>
+    <script src="~/js/inProgress.min.js"></script>
+</environment>
+<script defer="defer">
+var delay = 2000;
+var id = '@ViewData["RequestID"]';
+var baseUrl = '@ViewData["BaseUrl"]';
+inProgress(delay, id, baseUrl);
+</script>
+}

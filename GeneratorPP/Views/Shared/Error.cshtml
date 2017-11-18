@@ -1,0 +1,24 @@
+﻿@using Microsoft.Extensions.Options;
+@inject IOptions<AppSettings> AppSettings
+@model ErrorViewModel
+@{
+    ViewData["Title"] = "Chyba";
+}
+
+<h1 class="text-danger">Chyba</h1>
+<h2 class="text-danger">Pri spracovaní požiadavky nastala chyba.</h2>
+
+@if (Model.ShowRequestId)
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.RequestId</code>
+    </p>
+}
+
+<h2>Čo teraz?</h2>
+<p>
+    Skúste zopakovať, čo ste práve robili. Ak sa chyba opakuje alebo dlhšie pretrváva, dajte nám o tom vedieť 
+    na adresu <<a href="mailto:@AppSettings.Value.SupportMail?Subject=GeneratorPP">@AppSettings.Value.SupportMail</a>>.
+</p>
+
+<a id="back" class="btn btn-default btn-lg" asp-action=""><span class="glyphicon glyphicon-fast-backward"></span> Naspäť</a>

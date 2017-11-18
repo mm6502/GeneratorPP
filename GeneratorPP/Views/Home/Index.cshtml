@@ -1,0 +1,42 @@
+﻿@{
+    ViewData["Title"] = "Generátor platobných predpisov";
+}
+
+@Html.Partial("AppDescriptionPartial")
+
+<form method="post" asp-controller="Home" enctype="multipart/form-data">
+
+    <section>
+        <h2>Postup <span style="font-size: smaller">(časť 1)</span></h2>
+        <div>
+            <ol>
+                <li>Stiahnite si šablónu platobného hárku pre <a href="platobny_harok.xltx"><span class="glyphicon glyphicon-download"></span> Excel (xltx, 11 kiB)</a></li>
+                <li>Podľa šablóny vytvorte nový dokument a vyplňte údaje podľa potreby</li>
+                <li>
+                    Vyberte vyplnený platobný hárok
+                    <input id="inputFile" class="inputfile" type="file" name="inputFile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"/>
+                    <label for="inputFile" class="btn btn-default" data-caption="Vybrať súbor"><span class="glyphicon glyphicon-open"></span> <span>Vybrať súbor</span></label>
+                </li>
+            </ol>
+        </div>
+        <button id="uploadFile" class="btn btn-default btn-lg" type="submit" asp-action="UploadFile" disabled="disabled" aria-disabled="True"><span class="glyphicon glyphicon-play"></span> Pokračovať</button>
+    </section>
+
+    <environment include="Development">
+        <h2>!Development Environment!</h2>
+        <div class="row">
+            <button class="btn btn-default" asp-action="Sample">Use Generated Sample</button>
+            <button class="btn btn-default" type="submit" asp-action="SampleFile">Use Sample File</button>
+        </div>
+    </environment>
+</form>
+
+@section Scripts {
+<environment include="Development">
+    <script src="~/js/index.js" asp-append-version="true"></script>
+</environment>
+<environment exclude="Development">
+    <script src="~/js/index.min.js" asp-append-version="true"></script>
+</environment>
+}
+

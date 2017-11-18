@@ -1,0 +1,135 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,700|Merriweather:100,200,300,500&amp;subset=latin,latin-ext" type="text/css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/css/bootstrap.min.css"
+              asp-fallback-href="~/lib/bootstrap/dist/css/bootstrap.min.css"
+              asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <nav class="navbar" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="https://ekosystem.slovensko.digital"><img width="270" src="/images/ekosystem.svg" alt="Ekosystem"></a>
+            </div>
+            <div id="navbar" class="navbar-right visible-lg visible-md">
+                <ul class="nav navbar-nav">
+                    <li class="navbar-claim">Služby. Otvorené API. Otvorené dáta.</li>
+                    <li class="navbar-last">
+                        <a href="https://platforma.slovensko.digital" target="_blank">Platforma <img src="/images/platforma-arrow.svg" alt="Platforma arrow" width="26" height="26"></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container body-content">
+        @RenderBody()
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <address>
+                        <a href="https://slovensko.digital/"><strong>Slovensko.Digital</strong></a><br>
+                        Staré grunty 12<br>
+                        841 04 Bratislava<br>
+                    </address>
+                    <p><a href="mailto:kontakt@slovensko.digital">kontakt@slovensko.digital</a></p>
+                </div>
+
+                <div class="col-md-3">
+                    <ul class="list-unstyled">
+                        <li>
+                            <a href="https://ekosystem.slovensko.digital/">
+                                <strong>Ekosystém</strong>
+                            </a>
+                        </li>
+                        <li><a href="https://ekosystem.slovensko.digital/">Služby</a></li>
+                        <li><a href="https://ekosystem.slovensko.digital/otvorene-data">Otvorené dáta</a></li>
+                        <li><a href="https://ekosystem.slovensko.digital/otvorene-api">Otvorené API</a></li>
+                        <li><a href="https://ekosystem.slovensko.digital/premiove-data">Prémiové dáta</a></li>
+                        <li><a href="https://ekosystem.slovensko.digital/premiove-api">Prémiové API</a></li>
+                        <li><a href="https://ekosystem.slovensko.digital/podmienky">Podmienky používania</a></li>
+                        <li><a href="https://platforma.slovensko.digital/t/ekosystem-slovensko-digital-novinky/2326">Novinky</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-3">
+                    <ul class="list-unstyled">
+                        <li><a href="https://slovensko.digital/"><strong>Občianske združenie</strong></a></li>
+                        <li><a href="https://slovensko.digital/o-nas">O nás</a></li>
+                        <li><a href="https://slovensko.digital/podpora">Podpora</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-md-2">
+                    <p class="pull-right icons">
+                        <a href="https://www.facebook.com/slovensko.digital/" target="_blank">
+                            <span class="fa-stack fa-lg">
+                                <span class="fa fa-circle fa-stack-2x"></span>
+                                <span class="fa fa-facebook fa-stack-1x fa-inverse"></span>
+                            </span>
+                        </a>
+                        <a href="https://github.com/slovensko-digital/ekosystem" target="_blank">
+                            <span class="fa-stack fa-lg">
+                                <span class="fa fa-circle fa-stack-2x"></span>
+                                <span class="fa fa-github fa-stack-1x fa-inverse"></span>
+                            </span>
+                        </a>
+                        <a href="https://www.youtube.com/channel/UCbpnKa1XOIpQLYUQ2dz7Sng" target="_blank">
+                            <span class="fa-stack fa-lg">
+                                <span class="fa fa-circle fa-stack-2x"></span>
+                                <span class="fa fa-youtube fa-stack-1x fa-inverse"></span>
+                            </span>
+                        </a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+<environment include="Development">
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+</environment>
+<environment exclude="Development">
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
+            asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
+            asp-fallback-test="window.jQuery"
+            crossorigin="anonymous"
+            integrity="sha384-K+ctZQ+LL8q6tP7I94W+qzQsfRV2a+AfHIi9k8z8l9ggpc8X+Ytst4yBo/hH+8Fk">
+    </script>
+    <script src="https://ajax.aspnetcdn.com/ajax/bootstrap/3.3.7/bootstrap.min.js"
+            asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.min.js"
+            asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
+            crossorigin="anonymous"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
+    </script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+            integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+            crossorigin="anonymous"></script>
+</environment>
+
+@RenderSection("Scripts", required: false)
+
+</body>
+</html>
