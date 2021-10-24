@@ -1,9 +1,5 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
 WORKDIR /app
-
-# install bower (and restore bower packages)
-COPY .bowerrc bower.json ./
-RUN bower install
 
 # Copy csproj and restore as distinct layers
 COPY *.csproj ./
@@ -14,7 +10,7 @@ COPY . ./
 RUN dotnet publish -c Release -o out
 
 # Build runtime image
-FROM microsoft/aspnetcore:2.0
+FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 ENV ASPNETCORE_URLS http://*:7500
 EXPOSE 7500

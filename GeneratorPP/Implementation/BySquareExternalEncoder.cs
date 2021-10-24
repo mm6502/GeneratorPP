@@ -83,13 +83,11 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
 
             try
             {
-                using (var client = new HttpClient())
-                {
-                    var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
-                    var responseString = response.Content.ReadAsStringAsync().Result;
-                    var setOfCodes = this.Serializer.DeserializeSetOfCodes(responseString);
-                    return setOfCodes.PayBySquare;
-                }
+                using var client = new HttpClient();
+                var response = client.SendAsync(request, HttpCompletionOption.ResponseContentRead).Result;
+                var responseString = response.Content.ReadAsStringAsync().Result;
+                var setOfCodes = this.Serializer.DeserializeSetOfCodes(responseString);
+                return setOfCodes.PayBySquare;
             }
             catch (Exception ex)
             {

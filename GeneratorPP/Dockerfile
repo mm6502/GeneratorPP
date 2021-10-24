@@ -1,4 +1,4 @@
-﻿FROM microsoft/aspnetcore:2.0
+﻿FROM mcr.microsoft.com/dotnet/aspnet:5.0
 WORKDIR /app
 ENV ASPNETCORE_URLS http://*:7500
 EXPOSE 7500

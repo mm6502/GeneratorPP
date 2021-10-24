@@ -17,31 +17,27 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="bySquareXmlDocuments">The by square XML documents.</param>
         public string SerializeAsXml(BySquareXmlDocuments bySquareXmlDocuments)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var xtw = XmlWriter.Create(ms,
+                new XmlWriterSettings()
+                {
+                    ConformanceLevel = ConformanceLevel.Auto,
+                    CloseOutput = false,
+                    Indent = true,
+                    IndentChars = "    ",
+                    OmitXmlDeclaration = true,
+                }))
             {
-                using (var xtw = XmlWriter.Create(ms,
-                    new XmlWriterSettings()
-                    {
-                        ConformanceLevel = ConformanceLevel.Auto,
-                        CloseOutput = false,
-                        Indent = true,
-                        IndentChars = "    ",
-                        OmitXmlDeclaration = true,
-                    }))
-                {
-                    var ds = new XmlSerializer(typeof(BySquareXmlDocuments));
-                    ds.Serialize(xtw, bySquareXmlDocuments);
-                    xtw.Flush();
-                }
+                var ds = new XmlSerializer(typeof(BySquareXmlDocuments));
+                ds.Serialize(xtw, bySquareXmlDocuments);
+                xtw.Flush();
+            }
 
-                ms.Position = 0;
+            ms.Position = 0;
 
-                using (var sr = new StreamReader(ms))
-                {
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
+            using var sr = new StreamReader(ms);
+            {
+                return sr.ReadToEnd();
             }
         }
 
@@ -51,31 +47,27 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="bySquareDocument">The by square document.</param>
         public string SerializeAsXml(BySquareDocument bySquareDocument)
         {
-            using (var ms = new MemoryStream())
+            using var ms = new MemoryStream();
+            using (var xtw = XmlWriter.Create(ms,
+                new XmlWriterSettings()
+                {
+                    ConformanceLevel = ConformanceLevel.Auto,
+                    CloseOutput = false,
+                    Indent = true,
+                    IndentChars = "    ",
+                    OmitXmlDeclaration = true,
+                }))
             {
-                using (var xtw = XmlWriter.Create(ms,
-                    new XmlWriterSettings()
-                    {
-                        ConformanceLevel = ConformanceLevel.Auto,
-                        CloseOutput = false,
-                        Indent = true,
-                        IndentChars = "    ",
-                        OmitXmlDeclaration = true,
-                    }))
-                {
-                    var ds = new XmlSerializer(bySquareDocument.GetType());
-                    ds.Serialize(xtw, bySquareDocument);
-                    xtw.Flush();
-                }
+                var ds = new XmlSerializer(bySquareDocument.GetType());
+                ds.Serialize(xtw, bySquareDocument);
+                xtw.Flush();
+            }
 
-                ms.Position = 0;
+            ms.Position = 0;
 
-                using (var sr = new StreamReader(ms))
-                {
-                    {
-                        return sr.ReadToEnd();
-                    }
-                }
+            using var sr = new StreamReader(ms);
+            {
+                return sr.ReadToEnd();
             }
         }
 
@@ -85,18 +77,17 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="response">The response from web API QR string generator.</param>
         public StringSetOfCodes DeserializeSetOfCodes(string response)
         {
-            using (var sr = new StringReader(response))
-            using (var xtw = XmlReader.Create(sr,
+            using var sr = new StringReader(response);
+            using var xtw = XmlReader.Create(sr,
                 new XmlReaderSettings()
                 {
                     ConformanceLevel = ConformanceLevel.Auto,
-                    CloseInput = true, 
-                }))
-            {
-                var ds = new XmlSerializer(typeof(StringSetOfCodes));
-                var result = (StringSetOfCodes) ds.Deserialize(xtw);
-                return result;
-            }
+                    CloseInput = true,
+                }
+            );
+            var ds = new XmlSerializer(typeof(StringSetOfCodes));
+            var result = (StringSetOfCodes)ds.Deserialize(xtw);
+            return result;
         }
     }
 }

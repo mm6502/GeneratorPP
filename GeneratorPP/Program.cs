@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Hosting;
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP
 {
@@ -14,18 +14,20 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP
         /// <param name="args">The arguments.</param>
         public static void Main(string[] args)
         {
-            Program.BuildWebHost(args).Run();
+            CreateHostBuilder(args).Build().Run();
         }
 
         /// <summary>
         /// Builds the web host.
         /// </summary>
         /// <param name="args">The arguments.</param>
-        public static IWebHost BuildWebHost(string[] args)
+        public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            return WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+            return Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<Startup>();
+                });
         }
     }
 }

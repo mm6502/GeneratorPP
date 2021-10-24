@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Hosting;
 using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.Formats.Png;
-using SixLabors.ImageSharp.Helpers;
-using SixLabors.Primitives;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
 {
@@ -15,7 +15,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <summary>
         /// The environment.
         /// </summary>
-        private readonly IHostingEnvironment _environment;
+        private readonly IWebHostEnvironment _environment;
 
         /// <summary>
         /// Gets or sets the logo.
@@ -26,7 +26,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// Initializes a new instance of the <see cref="ImageManipulator"/> class.
         /// </summary>
         /// <param name="environment">The environment.</param>
-        public ImageManipulator(IHostingEnvironment environment)
+        public ImageManipulator(IWebHostEnvironment environment)
         {
             this._environment = environment;
 
@@ -40,10 +40,8 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         private Image<Rgba32> LoadLogo()
         {
             var logoPath = Path.Combine(this._environment.WebRootPath, "images", "bysquare.logo.png");
-            using (var stream = File.Open(logoPath, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                return new PngDecoder().Decode<Rgba32>(Configuration.Default, stream);
-            }
+            using var stream = File.Open(logoPath, FileMode.Open, FileAccess.Read, FileShare.Read);
+            return new PngDecoder().Decode<Rgba32>(Configuration.Default, stream);
         }
         
         /// <summary>
@@ -52,12 +50,10 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="bitmap">The bitmap.</param>
         public byte[] GetImageData(Image<Rgba32> bitmap)
         {
-            using (var ms = new MemoryStream())
-            {
-                bitmap.SaveAsPng(ms, new PngEncoder { PaletteSize = 16, PngColorType = PngColorType.Palette });
-                ms.Position = 0;
-                return ms.ToArray();
-            }
+            using var ms = new MemoryStream();
+            bitmap.SaveAsPng(ms, new PngEncoder { BitDepth = PngBitDepth.Bit4, ColorType = PngColorType.Palette });
+            ms.Position = 0;
+            return ms.ToArray();
         }
 
         /// <summary>
@@ -110,7 +106,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
                 var row = bitmapStrings[j];
                 for (var i = 0; i < row.Length; i++)
                 {
-                    var qrPixel = ((row[i] == '0') ? Rgba32.White : Rgba32.Black);
+                    var qrPixel = (Rgba32) ((row[i] == '0') ? Color.White : Color.Black);
                     this.DrawQrPixel(qrCodeImage, pixelSize, i, j, qrPixel);
                 }
             }
@@ -156,7 +152,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
             var result = logo.Clone();
 
             result.Mutate(i => i
-                .DrawImage(qrCode, qrCode.Size(), qrCodeLocation, GraphicsOptions.Default)
+                .DrawImage(qrCode, qrCodeLocation, new GraphicsOptions() { Antialias = true })
             );
 
             return result;
@@ -168,12 +164,10 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="bitmap">The bitmap.</param>
         public string EncodeImageAsBase64String(Image<Rgba32> bitmap)
         {
-            using (var ms = new MemoryStream())
-            {
-                bitmap.SaveAsPng(ms, new PngEncoder { PaletteSize = 128, PngColorType = PngColorType.Palette });
-                ms.Position = 0;
-                return "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
-            }
+            using var ms = new MemoryStream();
+            bitmap.SaveAsPng(ms, new PngEncoder { BitDepth = PngBitDepth.Bit4, ColorType = PngColorType.Palette });
+            ms.Position = 0;
+            return "data:image/png;base64," + Convert.ToBase64String(ms.ToArray());
         }
     }
 }

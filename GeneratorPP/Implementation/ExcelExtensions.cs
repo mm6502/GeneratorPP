@@ -267,8 +267,8 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
             if (string.IsNullOrEmpty(cellReference))
                 return cellReference;
             var index = cellReference.IndexOfAny("0123456789".ToCharArray());
-            var column = cellReference.Substring(0, index);
-            var row = cellReference.Substring(index);
+            var column = cellReference[..index];
+            var row = cellReference[index..];
             var rowIndex = Convert.ToInt32(row) + rowShift;
             return column + rowIndex;
         }

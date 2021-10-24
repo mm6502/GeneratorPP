@@ -2,7 +2,7 @@
     ViewData["Title"] = "Generátor platobných predpisov";
 }
 
-@Html.Partial("AppDescriptionPartial")
+@await Html.PartialAsync("AppDescriptionPartial")
 
 <section>
     <h2>Postup <span style="font-size: smaller">(časť 2)</span></h2>
@@ -13,5 +13,5 @@
             <li>(Profit)</li>
         </ol>
     </div>
-    <a id="back" class="btn btn-default btn-lg" asp-action=""><span class="glyphicon glyphicon-fast-backward"></span> Naspäť</a>
+    <a id="back" class="btn btn-primary btn-lg" asp-action=""><span class="glyphicon glyphicon-fast-backward"></span> Naspäť</a>
 </section>

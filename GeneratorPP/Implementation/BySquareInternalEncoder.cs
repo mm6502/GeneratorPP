@@ -48,20 +48,12 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <exception cref="InvalidDataException">PayBySquare limit is 550 utf-8 characters.</exception>
         public string Encode(BySquareDocument document)
         {
-            string serializedDocument;
-
-            switch (document)
+            string serializedDocument = document switch
             {
-                case Pay pay:
-                    serializedDocument = this.Encode(pay);
-                    break;
-                case Invoice invoice:
-                    serializedDocument = this.Encode(invoice);
-                    break;
-                default:
-                    throw new NotSupportedException("Unknown type of BySquareDocument.");
-            }
-
+                Pay pay         => this.Encode(pay),
+                Invoice invoice => this.Encode(invoice),
+                _               => throw new NotSupportedException("Unknown type of BySquareDocument."),
+            };
             if (serializedDocument.Length > MaxLength)
                 throw new InvalidDataException("PayBySquare limit is 550 utf-8 characters.");
 
@@ -172,19 +164,18 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
         /// <param name="data">The data.</param>
         protected byte[] Compress(byte[] data)
         {
-            using (var output = new MemoryStream())
+            using var output = new MemoryStream();
+            
+            // compress data
+            var encoderProperties = new SharpCompress.Compressors.LZMA.LzmaEncoderProperties(false, this.LzmaEncoderDictionarySize);
+            using (var compressor = new SharpCompress.Compressors.LZMA.LzmaStream(encoderProperties, false, output))
             {
-                // compress data
-                var encoderProperties = new SharpCompress.Compressors.LZMA.LzmaEncoderProperties(false, this.LzmaEncoderDictionarySize);
-                using (var compressor = new SharpCompress.Compressors.LZMA.LzmaStream(encoderProperties, false, output))
-                {
-                    // compressor flushes to output stream at dispose
-                    compressor.Write(data, 0, data.Length);
-                }
-
-                // return the compressed data
-                return output.ToArray();
+                // compressor flushes to output stream at dispose
+                compressor.Write(data, 0, data.Length);
             }
+
+            // return the compressed data
+            return output.ToArray();
         }
 
         /// <summary>
@@ -249,7 +240,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
             var builder = new StringBuilder();
 
             builder.Append(Delimiter);
-            builder.Append(document.Payments.Count.ToString());
+            builder.Append(document.Payments.Count);
 
             foreach (var payment in document.Payments)
             {

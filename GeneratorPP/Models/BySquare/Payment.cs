@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Xml.Serialization;
 using Digital.Slovensko.Ekosystem.GeneratorPP.Implementation;
 
@@ -24,14 +25,14 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Models.BySquare
         {
             get { return string.Join(" ", this._paymentOptions.GetSetFlagsXmlStrings()); }
             set { this._paymentOptions = Enum.Parse<PaymentOptions>(value, true); }
-        } 
+        }
 
         [XmlIgnore]
         public PaymentOptions PaymentOptionsEnum
-        { 
+        {
             get { return this._paymentOptions; }
             set { this._paymentOptions = value; }
-        } 
+        }
 
         [XmlElement(Order = 4, ElementName = "Amount", IsNullable = true)]
         [Range(minimum: 0, maximum: 9999)]
@@ -43,9 +44,15 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Models.BySquare
         [Required]
         public string CurrencyCode { get; set; } = "EUR";
 
-        [XmlElement(Order = 6, ElementName = "PaymentDueDate", IsNullable = true)]
-        [DataType(DataType.Date)]
+        [XmlIgnore]
         public DateTime? PaymentDueDate { get; set; } = null;
+
+        [XmlElement(Order = 6, ElementName = "PaymentDueDate", IsNullable = true)]
+        public string PaymentDueDateString
+        {
+            get => PaymentDueDate?.ToString("yyyy-MM-dd");
+            set => DateTime.Parse(value, CultureInfo.InvariantCulture);
+        }
 
         [XmlElement(Order = 7, ElementName = "VariableSymbol")]
         [StringLength(maximumLength: 10)]

@@ -1,8 +1,11 @@
 ﻿using Digital.Slovensko.Ekosystem.GeneratorPP.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP
 {
@@ -20,7 +23,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP
         /// Initializes a new instance of the <see cref="Startup"/> class.
         /// </summary>
         /// <param name="environment">The environment.</param>
-        public Startup(IHostingEnvironment environment)
+        public Startup(IWebHostEnvironment environment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(environment.ContentRootPath)
@@ -48,7 +51,8 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP
             // Register the IConfiguration instance which AppSettings binds against.
             services.Configure<AppSettings>(this.Configuration);
 
-            services.AddMvc();
+            // services.AddMvc();
+            services.AddControllersWithViews();
         }
 
         /// <summary>
@@ -57,27 +61,30 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP
         /// </summary>
         /// <param name="app">The application.</param>
         /// <param name="env">The env.</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             app.UseSession();
 
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseBrowserLink();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                // app.UseHsts();
             }
 
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}"
+                    pattern: "{controller=Home}/{action=Index}/{id?}"
                 );
             });
         }

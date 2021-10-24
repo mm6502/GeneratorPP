@@ -26,7 +26,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         /// <summary>
         /// Gets the environment.
         /// </summary>
-        private IHostingEnvironment Environment { get; }
+        private IWebHostEnvironment Environment { get; }
 
         /// <summary>
         /// Gets or sets the logger.
@@ -54,7 +54,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         /// <param name="logger">The logger.</param>
         /// <param name="settings">The settings.</param>
         public HomeController(
-            IHostingEnvironment environment,
+            IWebHostEnvironment environment,
             ILogger<HomeController> logger,
             IOptions<AppSettings> settings
         )
@@ -371,7 +371,11 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             var excelManipulator = new ExcelManipulator(encoder, imageManipulator, null);
 
             var filePath = Path.Combine(this.Environment.ContentRootPath, "Samples", "platobny_harok.xlsx");
-            (var dummy, var bySquareDocuments) = excelManipulator.ReadPaymentList(filePath);
+            (_, var bySquareDocuments) = excelManipulator.ReadPaymentList(filePath);
+
+            // alter date to current date
+            bySquareDocuments[0].Payments[0].PaymentDueDate = DateTime.Today.AddDays(1);
+
             ViewData["XML"] = serializer.SerializeAsXml(bySquareDocuments[0]);
             
             // generate QR code

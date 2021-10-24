@@ -57,7 +57,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
             }
 
             // Prepare container for the final value
-            StringBuilder builder = new StringBuilder(bytes.Length * InByteSize / OutByteSize);
+            StringBuilder builder = new (bytes.Length * InByteSize / OutByteSize);
 
             // Position in the input buffer
             int bytesPosition = 0;
@@ -143,7 +143,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
             // Check if empty
             else if (base32String == string.Empty)
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
             // Convert to upper-case

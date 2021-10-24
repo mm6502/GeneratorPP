@@ -1,4 +1,5 @@
 ﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation
 {
