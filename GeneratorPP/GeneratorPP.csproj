@@ -10,7 +10,7 @@
     <TypeScriptToolsVersion>2.3</TypeScriptToolsVersion>
     <AssemblyName>GeneratorPP</AssemblyName>
     <RootNamespace>Digital.Slovensko.Ekosystem.GeneratorPP</RootNamespace>
-    <LangVersion>7.1</LangVersion>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
