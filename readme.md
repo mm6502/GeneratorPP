@@ -11,7 +11,7 @@ Výstupom je dokument s platobnými predpismi - OpenXml Spreadsheet dokument vyt
 [platobne_predpisy.xltx](GeneratorPP/wwwroot/platobne_predpisy.xltx).
 
 ## Licencia
-Copyright (c) 2017 slovensko.digital, Licencia poskytnutá podľa [EUPL 1.2](https://joinup.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20SK.txt)
+Licencia poskytnutá podľa [EUPL 1.2](https://joinup.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20SK.txt)
 
 ## Dokumentácia
 QR kódy sú vytvárané podľa "Pay by square" [štandardu](http://www.sbaonline.sk/sk/projekty/qr-platby/) Slovenskej Bankovej Asociácie.

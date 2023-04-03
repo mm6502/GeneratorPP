@@ -1,0 +1,111 @@
+﻿<UserControl
+    x:Class="GeneratorPP.WPF.Mvvm.AboutPage.AboutPageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GeneratorPP.WPF.Mvvm.Page2"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <d:DesignerProperties.DataContext>
+        <local:Page2ViewModel />
+    </d:DesignerProperties.DataContext>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <FlowDocumentScrollViewer
+            Height="NaN"
+            VerticalScrollBarVisibility="Auto">
+            <FlowDocument x:Name="AboutDocument">
+                <Paragraph>
+                    <Span>Licencia poskytnutá podľa</Span>
+                    <Hyperlink NavigateUri="https://joinup.ec.europa.eu/sites/default/files/inline-files/EUPL%20v1_2%20SK.txt">
+                        EUPL 1.2
+                    </Hyperlink>
+                    <Span>.</Span>
+                </Paragraph>
+                <Paragraph>
+                    <Span>
+                        QR kódy sú vytvárané podľa "Pay by square" štandardu Slovenskej Bankovej Asociácie.
+                        Podrobnosti a dokumentácia sú na
+                    </Span>
+                    <Hyperlink NavigateUri="https://github.com/mm6502/GeneratorPP">
+                        stránke projektu
+                    </Hyperlink>
+                    .</Paragraph>
+                <Paragraph Style="{StaticResource Header2}">
+                    Použité diela
+                </Paragraph>
+                <List MarkerStyle="Disc">
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.sbaonline.sk/projekt/projekty-z-oblasti-platobnych-sluzieb/#:~:text=a%20logo%20manu%C3%A1l%20%E2%80%9E-,PAY%20by%20square,-%E2%80%9C">"Pay by square" špecifikácia</Hyperlink>
+                            <Span>"(Slovenská Banková Asociácia) -</Span>
+                            <Hyperlink NavigateUri="https://www.sbaonline.sk/wp-content/uploads/2020/03/podmienky-pouzitia-pay-by-square.pdf">licencia</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.nuget.org/packages/DocumentFormat.OpenXml/">DocumenFormat.OpenXml</Hyperlink>
+                            <Span>(Microsoft) -</Span>
+                            <Hyperlink NavigateUri="https://licenses.nuget.org/MIT">licencia MIT</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.nuget.org/packages/QRCoder/">QRCoder</Hyperlink>
+                            <Span>(Raffael Herrmann) -</Span>
+                            <Hyperlink NavigateUri="https://licenses.nuget.org/MIT">licencia MIT</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://scottless.com/blog/archive/2014/02/15/base32-encoder-and-decoder-in-c.aspx">Base32 Encoder and Decoder in C#</Hyperlink>
+                            <Span>(Oleg Ignat) -</Span>
+                            <Hyperlink NavigateUri="https://creativecommons.org/licenses/by/2.0/">licencia CC BY 2.0</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.nuget.org/packages/sharpcompress/">SharpCompress</Hyperlink>
+                            <Span>(adamhathcock) -</Span>
+                            <Hyperlink NavigateUri="https://licenses.nuget.org/MIT">licencia MIT</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.nuget.org/packages/SixLabors.ImageSharp/">SixLabors.ImageSharp</Hyperlink>
+                            <Span>(sixlabors) -</Span>
+                            <Hyperlink NavigateUri="https://www.apache.org/licenses/LICENSE-2.0">licencia Apache 2.0</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                    <ListItem>
+                        <Paragraph>
+                            <Hyperlink NavigateUri="https://www.nuget.org/packages/SixLabors.ImageSharp.Drawing/">SixLabors.ImageSharp.Drawing</Hyperlink>
+                            <Span>(sixlabors) -</Span>
+                            <Hyperlink NavigateUri="https://www.apache.org/licenses/LICENSE-2.0">licencia Apache 2.0</Hyperlink>
+                        </Paragraph>
+                    </ListItem>
+                </List>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+        <Separator Grid.Row="1" />
+
+        <StackPanel
+            Grid.Row="2"
+            Orientation="Horizontal">
+            <Button
+                Command="{Binding ContinueCommand}"
+                Content="Späť" />
+
+        </StackPanel>
+
+    </Grid>
+
+</UserControl>

@@ -1,0 +1,73 @@
+﻿<Window
+    x:Class="GeneratorPP.WPF.Mvvm.MainWindow.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mainWindow="clr-namespace:GeneratorPP.WPF.Mvvm.MainWindow"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:misc="clr-namespace:GeneratorPP.WPF.Misc"
+    Title="Generátor platobných predpisov"
+    Width="600"
+    Height="450"
+    MinWidth="450"
+    MinHeight="300"
+    d:DataContext="{d:DesignInstance Type=mainWindow:MainWindowViewModel}"
+    d:Height="450"
+    d:Width="600"
+    misc:DropFilesBehaviorExtension.IsEnabled="True"
+    ResizeMode="CanResizeWithGrip"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
+
+    <d:DesignerProperties.DataContext>
+        <mainWindow:MainWindowViewModel />
+    </d:DesignerProperties.DataContext>
+
+    <Grid Margin="15">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <FlowDocumentScrollViewer
+            Grid.Row="0"
+            Margin="0,0,0,15">
+            <FlowDocument PagePadding="10,0">
+                <Paragraph Style="{StaticResource Header1}">
+                    Generátor platobných predpisov
+                </Paragraph>
+                <Paragraph TextIndent="30">
+                    Pomocou tejto aplikácie môžete vygenerovať platobné predpisy pre väčšie množstvo platiteľov.
+                    Každý vygenerovaný predpis obsahuje informácie o&#160;platbe a&#160;PayBySquare QR kód na
+                    jednoduché zaplatenie mobilom.
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+        <StackPanel
+            Grid.Row="0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            Orientation="Horizontal">
+            <Button Command="{Binding GoToAboutPageCommand}">O aplikácii...</Button>
+            <StackPanel
+                Orientation="Horizontal"
+                Visibility="{Binding IsDebugMode, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Button Command="{Binding GoToPage1Command}">1</Button>
+                <Button Command="{Binding GoToPage2Command}">2</Button>
+                <Button Command="{Binding GoToPage3Command}">3</Button>
+            </StackPanel>
+        </StackPanel>
+
+        <Separator Grid.Row="1" />
+
+        <ContentControl
+            Grid.Row="2"
+            Content="{Binding Content}"
+            IsTabStop="False" />
+
+    </Grid>
+
+</Window>

@@ -1,11 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2009
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPP", "GeneratorPP\GeneratorPP.csproj", "{D9EAC32D-97DE-4320-91AA-C41E586AA4CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPP.Tests", "GeneratorPP.Tests\GeneratorPP.Tests.csproj", "{949AA502-065D-406C-B591-60C97897CF27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPP.Core", "GeneratorPP.Core\GeneratorPP.Core.csproj", "{A03D9D90-54F9-4F7E-A8F5-62C7158DB471}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneratorPP.Wpf", "GeneratorPP.Wpf\GeneratorPP.Wpf.csproj", "{1E6436F0-40DE-45B7-80CA-7AAB6022B167}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +25,14 @@ Global
 		{949AA502-065D-406C-B591-60C97897CF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{949AA502-065D-406C-B591-60C97897CF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{949AA502-065D-406C-B591-60C97897CF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A03D9D90-54F9-4F7E-A8F5-62C7158DB471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A03D9D90-54F9-4F7E-A8F5-62C7158DB471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A03D9D90-54F9-4F7E-A8F5-62C7158DB471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A03D9D90-54F9-4F7E-A8F5-62C7158DB471}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1E6436F0-40DE-45B7-80CA-7AAB6022B167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1E6436F0-40DE-45B7-80CA-7AAB6022B167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1E6436F0-40DE-45B7-80CA-7AAB6022B167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1E6436F0-40DE-45B7-80CA-7AAB6022B167}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

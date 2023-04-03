@@ -1,0 +1,79 @@
+﻿<UserControl
+    x:Class="GeneratorPP.WPF.Mvvm.Page1.Page1View"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:GeneratorPP.WPF.Mvvm.Page1"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <d:DesignerProperties.DataContext>
+        <local:Page1ViewModel />
+    </d:DesignerProperties.DataContext>
+
+    <FlowDocumentScrollViewer>
+        <FlowDocument>
+            <List StartIndex="1">
+                <ListItem>
+                    <Paragraph>
+                        <Run>Uložte si šablónu platobného hárku.</Run>
+                        <LineBreak />
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <Button
+                                Margin="0,10,0,5"
+                                Command="{Binding SaveTemplateCommand}"
+                                Content="Uložiť šablónu" />
+                        </InlineUIContainer>
+                    </Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>Podľa šablóny vytvorte nový dokument a vyplňte údaje podľa potreby.</Paragraph>
+                </ListItem>
+                <ListItem>
+                    <Paragraph>Vyberte vyplnený platobný hárok.</Paragraph>
+                    <BlockUIContainer>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition />
+                            </Grid.RowDefinitions>
+
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Content="Vybraný zdrojový súbor"
+                                Target="{Binding ElementName=SourceFile}" />
+
+                            <TextBox
+                                x:Name="SourceFile"
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Text="{Binding InputFilePath, Delay=250, UpdateSourceTrigger=PropertyChanged}" />
+
+                            <Button
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Margin="5,0,0,0"
+                                Command="{Binding SelectInputFileCommand}"
+                                Content="Nájsť" />
+                        </Grid>
+                    </BlockUIContainer>
+                </ListItem>
+            </List>
+            <Paragraph>
+                <InlineUIContainer BaselineAlignment="Center">
+                    <Button
+                        Command="{Binding ContinueCommand}"
+                        Content="Pokračovať" />
+                </InlineUIContainer>
+                <Run />
+            </Paragraph>
+        </FlowDocument>
+    </FlowDocumentScrollViewer>
+
+</UserControl>

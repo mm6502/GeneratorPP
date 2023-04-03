@@ -4,8 +4,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Digital.Slovensko.Ekosystem.GeneratorPP.Implementation;
+using GeneratorPP.Core.Implementation;
 using Digital.Slovensko.Ekosystem.GeneratorPP.Models;
-using Digital.Slovensko.Ekosystem.GeneratorPP.Models.BySquare;
+using GeneratorPP.Core.Models.BySquare;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -264,7 +265,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             };
 
             var serializer = this.Encoder;
-            var imageManipulator = new ImageManipulator(this.Environment);
+            var imageManipulator = new ImageManipulator();
             var excelManipulator = new ExcelManipulator(serializer, imageManipulator, progressReporter);
             var sourceFilePath = HomeController.GetTempInputFilePath(data.RequestId);
             var templateFilePath = Path.Combine(this.Environment.WebRootPath, "platobne_predpisy.xltx");
@@ -352,8 +353,8 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             var qrstring = this.Encoder.Encode(bySquareXmlDocuments.Documents[0]);
 
             // create final image
-            var image = new ImageManipulator(this.Environment).CreateQrCodeWithLogo(qrstring);
-            ViewData["IMAGE"] = new ImageManipulator(this.Environment).EncodeImageAsBase64String(image);
+            var image = new ImageManipulator().CreateQrCodeWithLogo(qrstring);
+            ViewData["IMAGE"] = new ImageManipulator().EncodeImageAsBase64String(image);
 
             // render object
             return View();
@@ -367,7 +368,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         {
             var serializer = new BySquareXmlSerializer();
             var encoder = new BySquareInternalEncoder();
-            var imageManipulator = new ImageManipulator(this.Environment);
+            var imageManipulator = new ImageManipulator();
             var excelManipulator = new ExcelManipulator(encoder, imageManipulator, null);
 
             var filePath = Path.Combine(this.Environment.ContentRootPath, "Samples", "platobny_harok.xlsx");

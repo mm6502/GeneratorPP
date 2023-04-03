@@ -2,7 +2,8 @@
 using System.Net.Http;
 using System.Text;
 using Digital.Slovensko.Ekosystem.GeneratorPP.Models;
-using Digital.Slovensko.Ekosystem.GeneratorPP.Models.BySquare;
+using GeneratorPP.Core.Implementation;
+using GeneratorPP.Core.Models.BySquare;
 using Microsoft.Extensions.Logging;
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP.Implementation

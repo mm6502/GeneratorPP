@@ -1,6 +1,6 @@
-using Digital.Slovensko.Ekosystem.GeneratorPP.Implementation;
+using GeneratorPP.Core.Implementation;
 using Digital.Slovensko.Ekosystem.GeneratorPP.Models;
-using Digital.Slovensko.Ekosystem.GeneratorPP.Models.BySquare;
+using GeneratorPP.Core.Models.BySquare;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Digital.Slovensko.Ekosystem.GeneratorPP.Tests
@@ -42,20 +42,20 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Tests
             var account1 = new BankAccount
             {
                 IBAN = "SK2911000000005902208743",
-                BIC = "TATRSKBX"
+                BIC = "TATRSKBX",
             };
 
             var account2 = new BankAccount
             {
                 IBAN = "SK2011000000002619521810",
-                BIC = "TATRSKBX"
+                BIC = "TATRSKBX",
             };
 
             var payment = new Payment(account1, account2)
             {
                 Amount = 10,
                 PaymentNote = "poznamka",
-                OriginatorsReferenceInformation = "reference"
+                OriginatorsReferenceInformation = "reference",
             };
 
             var pay = new Pay(payment);

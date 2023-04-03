@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>net5</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <DockerComposeProjectPath>..\Projects\docker-compose.dcproj</DockerComposeProjectPath>
     <UserSecretsId>aded0c5e-fb85-49c4-b0d9-c627f65f5a0e</UserSecretsId>
     <RuntimeIdentifiers>win-x64;linux-x64</RuntimeIdentifiers>
@@ -24,13 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DocumentFormat.OpenXml" Version="2.7.2" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.13" />
     <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="2.2.0" />
-    <PackageReference Include="QRCoder" Version="1.4.1" />
-    <PackageReference Include="SharpCompress" Version="0.30.0" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="1.0.4" />
-    <PackageReference Include="SixLabors.ImageSharp.Drawing" Version="1.0.0-beta13" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GeneratorPP.Core\GeneratorPP.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -42,7 +41,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Update="wwwroot\platobny_harok.xltx">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
