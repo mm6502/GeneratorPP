@@ -1,0 +1,4 @@
+name: GeneratorPP CodeQL Config
+
+paths-ignore:
+  - "GeneratorPP/wwwroot/lib/**"

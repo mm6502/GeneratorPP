@@ -187,7 +187,13 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             var downStream = System.IO.File.OpenRead(outputFilePath);
 
             // signal the download is ready (consumed by jquery-fileDownload)
-            this.Response.Cookies.Append("fileDownload", "true", new CookieOptions {Path = "/", HttpOnly = false});
+            this.Response.Cookies.Append("fileDownload", "true", new CookieOptions
+            {
+                Path = "/",
+                HttpOnly = false,
+                Secure = this.Request.IsHttps,
+                SameSite = SameSiteMode.Lax,
+            });
 
             this.HttpContext.Session.Remove(normalizedId);
             // ReSharper disable once ConsiderUsingConfigureAwait
@@ -266,7 +272,13 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         public static string GetTempFilePath(string id, string flavor)
         {
             var normalizedId = NormalizeRequestId(id);
-            return Path.Combine(Path.GetTempPath(), $"{normalizedId}_{flavor}.xlsx");
+            var tempRoot = Path.GetFullPath(Path.GetTempPath());
+            var candidate = Path.GetFullPath(Path.Combine(tempRoot, $"{normalizedId}_{flavor}.xlsx"));
+
+            if (!candidate.StartsWith(tempRoot, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Resolved file path is outside of temporary directory.");
+
+            return candidate;
         }
 
         /// <summary>

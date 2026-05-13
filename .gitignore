@@ -50,6 +50,9 @@ project.lock.json
 project.fragment.lock.json
 artifacts/
 **/Properties/launchSettings.json
+.config/
+!.config/
+!.config/dotnet-tools.json
 
 *_i.c
 *_p.c
