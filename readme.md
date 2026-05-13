@@ -45,10 +45,9 @@ QR kódy sú vytvárané podľa "Pay by square" [štandardu](http://www.sbaonlin
 ## Použité diela
 
 - "Pay by square" špecifikácia (Slovenská Banková Asociácia) - [licencia](http://www.sbaonline.sk/sk/projekty/qr-platby/podmienky-pouzitia-specifikacia-standardu-pay-square.html)
-- [DocumenFormat.OpenXml](https://www.nuget.org/packages/DocumentFormat.OpenXml/) (Microsoft) -	licencia nebola špecifikovaná
+- [DocumenFormat.OpenXml](https://www.nuget.org/packages/DocumentFormat.OpenXml/) (Microsoft) - licencia nebola špecifikovaná
 - [QRCoder](https://www.nuget.org/packages/QRCoder/) (Raffael Herrmann) - [licencia](https://github.com/codebude/QRCoder/blob/master/LICENSE.txt) MIT
 - [Base32 Encoder and Decoder in C#](http://scottless.com/blog/archive/2014/02/15/base32-encoder-and-decoder-in-c.aspx) (Oleg Ignat) - [licencia](https://creativecommons.org/licenses/by/2.0/) CC BY 2.0
 - [SharpCompress](https://www.nuget.org/packages/sharpcompress/) (adamhathcock) - [licencia](https://github.com/adamhathcock/sharpcompress/blob/master/LICENSE.txt) MIT
 - [SixLabors.ImageSharp](https://www.nuget.org/packages/SixLabors.ImageSharp/) (sixlabors) - [licencia](http://www.apache.org/licenses/LICENSE-2.0) Apache 2.0
 - [SixLabors.ImageSharp.Drawing](https://www.nuget.org/packages/SixLabors.ImageSharp.Drawing/) (sixlabors) - [licencia](http://www.apache.org/licenses/LICENSE-2.0) Apache 2.0
-
