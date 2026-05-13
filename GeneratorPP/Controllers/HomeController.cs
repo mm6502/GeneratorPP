@@ -136,7 +136,17 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         [HttpGet]
         public IActionResult ProcessFile(string id)
         {
-            var data = this.RetrieveGenerationProgress(id);
+            string normalizedId;
+            try
+            {
+                normalizedId = NormalizeRequestId(id);
+            }
+            catch
+            {
+                return this.BadRequest("Invalid request id.");
+            }
+
+            var data = this.RetrieveGenerationProgress(normalizedId);
             ViewData["BaseUrl"] = $"{this.Request.Scheme}://{this.Request.Host}{this.Request.PathBase}";
             ViewData["RequestID"] = data.RequestId;
             return View("InProgress");
@@ -149,7 +159,17 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         [HttpGet]
         public async Task<IActionResult> Generate(string id)
         {
-            var data = this.RetrieveGenerationProgress(id);
+            string normalizedId;
+            try
+            {
+                normalizedId = NormalizeRequestId(id);
+            }
+            catch
+            {
+                return this.BadRequest("Invalid request id.");
+            }
+
+            var data = this.RetrieveGenerationProgress(normalizedId);
 
             // create the tasks
             var generatorTask = Task.Factory.StartNew(() => this.GenerateOutputFile(data), TaskCreationOptions.AttachedToParent | TaskCreationOptions.LongRunning);
@@ -169,7 +189,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             // signal the download is ready (consumed by jquery-fileDownload)
             this.Response.Cookies.Append("fileDownload", "true", new CookieOptions {Path = "/", HttpOnly = false});
 
-            this.HttpContext.Session.Remove(id);
+            this.HttpContext.Session.Remove(normalizedId);
             // ReSharper disable once ConsiderUsingConfigureAwait
             await this.HttpContext.Session.CommitAsync();
 
@@ -183,9 +203,19 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         /// </summary>
         /// <param name="id">The identifier.</param>
         [HttpGet]
-        public JsonResult GetProgress(string id)
+        public IActionResult GetProgress(string id)
         {
-            var data = this.RetrieveGenerationProgress(id);
+            string normalizedId;
+            try
+            {
+                normalizedId = NormalizeRequestId(id);
+            }
+            catch
+            {
+                return this.BadRequest("Invalid request id.");
+            }
+
+            var data = this.RetrieveGenerationProgress(normalizedId);
             return new JsonResult(data.Percent);
         }
 
@@ -199,17 +229,23 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         /// <param name="id">The request identifier.</param>
         public ProcessingModel RetrieveGenerationProgress(string id)
         {
+            var normalizedId = NormalizeRequestId(id);
+
             try
             {
-                var serialized = this.HttpContext.Session.GetString(id);
-                return JsonConvert.DeserializeObject<ProcessingModel>(serialized);
+                var serialized = this.HttpContext.Session.GetString(normalizedId);
+                var model = JsonConvert.DeserializeObject<ProcessingModel>(serialized);
+                if (model != null)
+                {
+                    return model;
+                }
             }
             catch
             {
                 // nothing to do
             }
 
-            return new ProcessingModel { RequestId = id };
+            return new ProcessingModel { RequestId = normalizedId };
         }
 
         /// <summary>
@@ -229,7 +265,20 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
         /// <param name="flavor">The desired file flavor. Used to differentiate between input and output files.</param>
         public static string GetTempFilePath(string id, string flavor)
         {
-            return Path.Combine(Path.GetTempPath(), $"{id}_{flavor}.xlsx");
+            var normalizedId = NormalizeRequestId(id);
+            return Path.Combine(Path.GetTempPath(), $"{normalizedId}_{flavor}.xlsx");
+        }
+
+        /// <summary>
+        /// Validates and normalizes request id to canonical GUID format.
+        /// </summary>
+        /// <param name="id">The request identifier from client input.</param>
+        private static string NormalizeRequestId(string id)
+        {
+            if (!Guid.TryParse(id, out var guid))
+                throw new ArgumentException("Invalid request id format.", nameof(id));
+
+            return guid.ToString("D");
         }
 
         /// <summary>
