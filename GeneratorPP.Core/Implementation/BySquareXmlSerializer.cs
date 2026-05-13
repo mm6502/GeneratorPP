@@ -86,7 +86,12 @@ namespace GeneratorPP.Core.Implementation
                 }
             );
             var ds = new XmlSerializer(typeof(StringSetOfCodes));
-            var result = (StringSetOfCodes)ds.Deserialize(xtw);
+            var result = ds.Deserialize(xtw) as StringSetOfCodes;
+            if (result == null)
+            {
+                throw new InvalidDataException("Unable to deserialize StringSetOfCodes.");
+            }
+
             return result;
         }
     }

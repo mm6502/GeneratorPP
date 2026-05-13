@@ -14,7 +14,7 @@ namespace GeneratorPP.Core.Implementation
         #region BySquare Constants and Presets
 
         /// <summary>
-        /// PayBySquare limit is 550 utf-8 characters 
+        /// PayBySquare limit is 550 utf-8 characters.
         /// </summary>
         private const int MaxLength = 550;
 
@@ -86,7 +86,7 @@ namespace GeneratorPP.Core.Implementation
         /// </summary>
         /// <param name="payload">The payload data.</param>
         /// <returns>QR string.</returns>
-        public string? EncodeBytes(byte[] payload)
+        public string EncodeBytes(byte[] payload)
         {
             // get crc bytes
             var crc = new Crc32().ComputeHash(payload);
@@ -108,7 +108,8 @@ namespace GeneratorPP.Core.Implementation
             Array.Copy(compressed, 0, toBeEncoded, this.PayBySquareHeader.Length + length.Length, compressed.Length);
 
             // encode with Base32Hex
-            return Base32.ToBase32String(toBeEncoded);
+            return Base32.ToBase32String(toBeEncoded)
+                ?? throw new InvalidDataException("Failed to encode payload to Base32 string.");
         }
 
         /// <summary>
@@ -120,7 +121,10 @@ namespace GeneratorPP.Core.Implementation
         public byte[] DecodeBytes(string qrstring)
         {
             // decode from Base32Hex
-            var data2 = Base32.FromBase32String(qrstring);
+            var data2 = Base32.FromBase32String(qrstring)
+                ?? throw new InvalidDataException("Input QR string is null or invalid.");
+            if (data2.Length < 4)
+                throw new InvalidDataException("Input QR string payload is too short.");
 
             // data[0-1] // PayBySquare header
             // data[2-3] // original data length
@@ -165,10 +169,10 @@ namespace GeneratorPP.Core.Implementation
         protected byte[] Compress(byte[] data)
         {
             using var output = new MemoryStream();
-            
+
             // compress data
             var encoderProperties = new SharpCompress.Compressors.LZMA.LzmaEncoderProperties(false, this.LzmaEncoderDictionarySize);
-            using (var compressor = new SharpCompress.Compressors.LZMA.LzmaStream(encoderProperties, false, output))
+            using (var compressor = SharpCompress.Compressors.LZMA.LzmaStream.Create(encoderProperties, false, output))
             {
                 // compressor flushes to output stream at dispose
                 compressor.Write(data, 0, data.Length);
@@ -186,15 +190,15 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="originalDataLength">Length of the original data.</param>
         protected byte[] Decompress(byte[] data, int index, int originalDataLength)
         {
-            // PayBySquare limit is 550 utf-8 characters 
+            // PayBySquare limit is 550 utf-8 characters
             // longest utf-8 character is 4 bytes
             var buffer = new byte[originalDataLength];
 
             // decompress data
             using (var input = new MemoryStream(data, index, data.Length - index))
-            using (var decompressor = new SharpCompress.Compressors.LZMA.LzmaStream(this.LzmaDecoderProperties, input, input.Length, originalDataLength))
+            using (var decompressor = SharpCompress.Compressors.LZMA.LzmaStream.Create(this.LzmaDecoderProperties, input, input.Length, originalDataLength))
             {
-                decompressor.Read(buffer, 0, originalDataLength);
+                decompressor.ReadExactly(buffer, 0, originalDataLength);
             }
 
             // return the compressed data
@@ -209,10 +213,10 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="text">The text.</param>
         /// <param name="start">The start.</param>
         /// <param name="length">The length.</param>
-        protected string SafeSubstring(string text, int start, int length)
+        protected string SafeSubstring(string? text, int start, int length)
         {
             if (string.IsNullOrEmpty(text))
-                return text;
+            return string.Empty;
 
             if (start >= text.Length)
                 return string.Empty;

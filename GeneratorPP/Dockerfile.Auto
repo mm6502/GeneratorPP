@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build-env
+FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build-env
 WORKDIR /app
 
 # Copy csproj and restore as distinct layers
@@ -12,7 +12,7 @@ COPY ./GeneratorPP.Core/ ./GeneratorPP.Core/
 RUN dotnet publish ./GeneratorPP -c Release -o out
 
 # Build runtime image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:10.0
 WORKDIR /app
 ENV ASPNETCORE_URLS http://*:7500
 EXPOSE 7500

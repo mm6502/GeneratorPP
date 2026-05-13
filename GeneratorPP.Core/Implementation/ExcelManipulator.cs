@@ -51,13 +51,16 @@ namespace GeneratorPP.Core.Implementation
         /// <returns>Payment purpose and list of BySquareDocuments.</returns>
         public (string? paymentPurpose, List<Pay>) ReadPaymentList(string filePath)
         {
-            var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(filePath, false);
-            var workbook = document.WorkbookPart.Workbook;
-            var sharedStrings = workbook.WorkbookPart.SharedStringTablePart.SharedStringTable;
+            using var document = DocumentFormat.OpenXml.Packaging.SpreadsheetDocument.Open(filePath, false);
+            var workbookPart = document.WorkbookPart ?? throw new InvalidOperationException("WorkbookPart is missing.");
+            var workbook = workbookPart.Workbook ?? throw new InvalidOperationException("Workbook is missing.");
+            var sharedStrings = workbookPart.SharedStringTablePart?.SharedStringTable;
 
-            var sheet = workbook.Sheets.OfType<Sheet>().First();
-            var worksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)document.WorkbookPart.GetPartById(sheet.Id);
-            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+            var sheet = workbook.Sheets?.OfType<Sheet>().FirstOrDefault() ?? throw new InvalidOperationException("No worksheet found.");
+            var worksheetId = sheet.Id?.Value ?? throw new InvalidOperationException("Worksheet id is missing.");
+
+            var worksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)workbookPart.GetPartById(worksheetId);
+            var sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>() ?? throw new InvalidOperationException("SheetData is missing.");
 
             // bank account
             var account = new BankAccount
@@ -90,8 +93,8 @@ namespace GeneratorPP.Core.Implementation
 
             // return
             return (paymentPurpose, sheetData.OfType<Row>()
-                .Where(r => r.RowIndex > 10)
-                .OrderBy(r => r.RowIndex.Value)
+                .Where(r => r.RowIndex is not null && r.RowIndex > 10)
+                .OrderBy(r => r.RowIndex!.Value)
                 .Select(r => this.ReadSinglePaymentRow(r, sharedStrings, beneficiaryName, beneficiaryAddressLine1, account, paymentPurpose, dueDate))
                 // filter out invalid rows
                 .Where(p => p is not null)
@@ -112,7 +115,7 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="dueDate">The due date.</param>
         /// <returns></returns>
         private Pay? ReadSinglePaymentRow(
-            Row row, SharedStringTable sharedStrings, string? beneficiaryName, string? beneficiaryAddressLine1,
+            Row row, SharedStringTable? sharedStrings, string? beneficiaryName, string? beneficiaryAddressLine1,
             BankAccount account, string? paymentPurpose, DateTime dueDate)
         {
             // common values for all payments
@@ -157,7 +160,7 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="sharedStrings">The shared strings.</param>
         /// <param name="paymentPurpose">The payment purpose.</param>
         /// <param name="payment">The payment.</param>
-        private void BuildPaymentNote(Row row, SharedStringTable sharedStrings, string? paymentPurpose, Payment payment)
+        private void BuildPaymentNote(Row row, SharedStringTable? sharedStrings, string? paymentPurpose, Payment payment)
         {
             var paymentNote = row.GetCell("E")?.GetString(sharedStrings)?.Trim();
 
@@ -202,25 +205,37 @@ namespace GeneratorPP.Core.Implementation
                 document.ChangeDocumentType(SpreadsheetDocumentType.Workbook);
 
                 // get global parts
-                var workbookPart = document.WorkbookPart;
-                var workbook = workbookPart.Workbook;
+                var workbookPart = document.WorkbookPart ?? throw new InvalidOperationException("WorkbookPart is missing.");
+                var workbook = workbookPart.Workbook ?? throw new InvalidOperationException("Workbook is missing.");
 
                 // get hidden "template" sheet parts
-                var tempSheet = workbook.Sheets.Elements<Sheet>().Skip(1).First();
-                var tempWorksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)workbookPart.GetPartById(tempSheet.Id);
-                var tempSheetData = tempWorksheetPart.Worksheet.GetFirstChild<SheetData>();
+                var tempSheet = workbook.Sheets?.Elements<Sheet>().Skip(1).FirstOrDefault() ?? throw new InvalidOperationException("Template sheet is missing.");
+                var tempSheetId = tempSheet.Id?.Value ?? throw new InvalidOperationException("Template sheet id is missing.");
+
+                var tempWorksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)workbookPart.GetPartById(tempSheetId);
+                var tempSheetData = tempWorksheetPart.Worksheet.GetFirstChild<SheetData>() ?? throw new InvalidOperationException("Template SheetData is missing.");
                 var tempMergeCells = tempWorksheetPart.Worksheet.Elements<MergeCells>().FirstOrDefault();
                 var tempRows = tempSheetData.Elements<Row>().ToList();
                 var tempMergedCells = tempMergeCells?.Elements<MergeCell>().ToList();
 
                 // get the output "data" sheet parts
-                var dataSheet = workbook.Sheets.Elements<Sheet>().First();
-                var dataWorksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)workbookPart.GetPartById(dataSheet.Id);
+                var dataSheet = workbook.Sheets?.Elements<Sheet>().FirstOrDefault() ?? throw new InvalidOperationException("Output sheet is missing.");
+                var dataSheetId = dataSheet.Id?.Value ?? throw new InvalidOperationException("Output sheet id is missing.");
+
+                var dataWorksheetPart = (DocumentFormat.OpenXml.Packaging.WorksheetPart)workbookPart.GetPartById(dataSheetId);
                 var dataSheetData = dataWorksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
                 if (dataSheetData == null)
                 {
                     dataSheetData = new SheetData();
-                    dataWorksheetPart.Worksheet.InsertAfter(dataSheetData, dataWorksheetPart.Worksheet.Elements<Columns>().First());
+                    var columns = dataWorksheetPart.Worksheet.Elements<Columns>().FirstOrDefault();
+                    if (columns != null)
+                    {
+                        dataWorksheetPart.Worksheet.InsertAfter(dataSheetData, columns);
+                    }
+                    else
+                    {
+                        dataWorksheetPart.Worksheet.Append(dataSheetData);
+                    }
                 }
 
                 var shouldAddMergeCells = false;
@@ -239,7 +254,7 @@ namespace GeneratorPP.Core.Implementation
                     this.ProgressReporter?.Report((int)(100.0M * i / pays.Count));
                 }
 
-                // empty MergeCells make the worksheet invalid 
+                // empty MergeCells make the worksheet invalid
                 if (shouldAddMergeCells && (dataMergeCells.ChildElements.Count > 0))
                 {
                     dataWorksheetPart.Worksheet.InsertAfter(dataMergeCells, dataSheetData);
@@ -271,7 +286,7 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="templateMergedCells">The template merged cells.</param>
         /// <returns>Count of rows added.</returns>
         private int AddPay(
-            Pay pay, string? paymentPurpose, SheetData dataSheetData, MergeCells mergeCells, int baseRowIndex, 
+            Pay pay, string? paymentPurpose, SheetData dataSheetData, MergeCells mergeCells, int baseRowIndex,
             List<Row> templateRows, List<MergeCell>? templateMergedCells
         )
         {
@@ -280,7 +295,7 @@ namespace GeneratorPP.Core.Implementation
 
             // make deep copy of merged cells
             var newMergedCells = templateMergedCells?.Select(mc => (MergeCell) mc.CloneNode(true)).ToList();
-            
+
             // fill in data
             this.FillInPayData(pay, paymentPurpose, newRows);
 
@@ -293,14 +308,17 @@ namespace GeneratorPP.Core.Implementation
                 newRows.ForEach(r => r.UpdateCellReferences(index));
 
                 // update merged cells
-                newMergedCells?.ForEach(mc => mc.Reference.UpdateCellReference(index));
+                newMergedCells?.ForEach(mc => mc.Reference?.UpdateCellReference(index));
             }
 
             // append rows
             dataSheetData.Append(newRows);
 
             // append merged cells
-            mergeCells.Append(newMergedCells);
+            if (newMergedCells != null)
+            {
+                mergeCells.Append(newMergedCells);
+            }
 
             // insert QR code
             this.InsertQrCode(pay, dataSheetData, baseRowIndex);
@@ -366,10 +384,10 @@ namespace GeneratorPP.Core.Implementation
             const double realHeight = 5.17D;
 
             // get the worksheet
-            var worksheet = ((Worksheet) dataSheetData.Parent);
+            var worksheet = dataSheetData.Parent as Worksheet ?? throw new InvalidOperationException("Worksheet parent is missing.");
 
             // get the parts
-            var worksheetPart = worksheet.WorksheetPart;
+            var worksheetPart = worksheet.WorksheetPart ?? throw new InvalidOperationException("WorksheetPart is missing.");
             var drawingsPart = worksheetPart.DrawingsPart ?? worksheetPart.AddNewPart<DocumentFormat.OpenXml.Packaging.DrawingsPart>();
             var imagePart = drawingsPart.AddImagePart(DocumentFormat.OpenXml.Packaging.ImagePartType.Png);
 
@@ -416,7 +434,7 @@ namespace GeneratorPP.Core.Implementation
             // create the Drawing.Spreadsheet.NonVisualDrawingProperties
             var nvpId = 1 + (worksheetDrawing
                 .Descendants<DocumentFormat.OpenXml.Drawing.Spreadsheet.NonVisualDrawingProperties>()
-                .Select(p => p.Id.Value)
+                .Select(p => p.Id?.Value ?? 0U)
                 .DefaultIfEmpty()
                 .Max()
             );

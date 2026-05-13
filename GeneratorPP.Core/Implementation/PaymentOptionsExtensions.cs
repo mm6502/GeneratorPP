@@ -38,8 +38,14 @@ namespace GeneratorPP.Core.Implementation
         /// <param name="pEnumVal">The enum value.</param>
         public static string GetXmlAttrNameFromEnumValue(PaymentOptions pEnumVal)
         {
-            var info = typeof(PaymentOptions).GetField(Enum.GetName(typeof(PaymentOptions), pEnumVal));
-            return info.GetCustomAttribute<XmlEnumAttribute>(false)?.Name;
+            var enumName = Enum.GetName(typeof(PaymentOptions), pEnumVal);
+            if (string.IsNullOrEmpty(enumName))
+            {
+                return pEnumVal.ToString();
+            }
+
+            var info = typeof(PaymentOptions).GetField(enumName);
+            return info?.GetCustomAttribute<XmlEnumAttribute>(false)?.Name ?? enumName;
         }
     }
 }

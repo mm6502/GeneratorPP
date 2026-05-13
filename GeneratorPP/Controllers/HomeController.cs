@@ -168,13 +168,13 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
 
             // signal the download is ready (consumed by jquery-fileDownload)
             this.Response.Cookies.Append("fileDownload", "true", new CookieOptions {Path = "/", HttpOnly = false});
-            
+
             this.HttpContext.Session.Remove(id);
             // ReSharper disable once ConsiderUsingConfigureAwait
             await this.HttpContext.Session.CommitAsync();
 
             // send the file
-            this.Response.Headers.Add("Content-Disposition", new[] {$"attachment; filename=\"{downFileName}\""});
+            this.Response.Headers.Append("Content-Disposition", $"attachment; filename=\"{downFileName}\"");
             return new FileStreamResult(downStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
 
@@ -292,7 +292,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
                 }
                 return outputFilePath;
             }
-            
+
             // read source data
             (string paymentPurpose, var bySquareDocuments) = excelManipulator.ReadPaymentList(sourceFilePath);
 
@@ -378,7 +378,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
             bySquareDocuments[0].Payments[0].PaymentDueDate = DateTime.Today.AddDays(1);
 
             ViewData["XML"] = serializer.SerializeAsXml(bySquareDocuments[0]);
-            
+
             // generate QR code
             var qrstring = this.Encoder.Encode(bySquareDocuments[0]);
             var image = imageManipulator.CreateQrCodeWithLogo(qrstring);
@@ -411,7 +411,7 @@ namespace Digital.Slovensko.Ekosystem.GeneratorPP.Controllers
                 PaymentNote = "poznamka",
                 OriginatorsReferenceInformation = "reference"
             };
-           
+
             var pay = new Pay(payment);
 
             var bySquareXmlDocuments = new BySquareXmlDocuments(pay)
